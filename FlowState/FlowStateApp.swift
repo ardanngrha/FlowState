@@ -35,6 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if let button = statusItem.button {
             button.image = NSImage(systemSymbolName: "timer", accessibilityDescription: "Pomodoro Timer")
+            // --- EDIT: Set the image position to the right of the title ---
+            button.imagePosition = .imageRight
             button.action = #selector(togglePopover)
             button.target = self
         }
@@ -47,7 +49,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.animates = true
         
         // 3. Subscribe to ViewModel Changes to Update Menu Bar
-        // This is the new logic to show the timer in the menu bar.
+        // This is the logic to show the timer in the menu bar.
         viewModel.$timerIsActive
             .combineLatest(viewModel.$timeString)
             // We want updates on the main thread to change the UI.
@@ -55,6 +57,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             .sink { [weak self] (isActive, timeString) in
                 if isActive {
                     // If the timer is running, show the time in the menu bar.
+                    // The title now appears to the left of the icon.
                     self?.statusItem.button?.title = timeString
                 } else {
                     // If the timer is not running, clear the text to show only the icon.
@@ -157,6 +160,7 @@ struct PomodoroView: View {
     var body: some View {
         VStack(spacing: 15) {
             
+            // --- EDIT: Headline is set to "FlowState" ---
             Text("FlowState")
                 .font(.headline)
             
